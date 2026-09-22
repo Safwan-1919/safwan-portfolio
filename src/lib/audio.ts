@@ -1,12 +1,9 @@
 /**
  * Ambient paper-room sound + hand-drawn SFX, generated with the Web Audio API.
  *
- * No audio files required: the room tone is synthesised from filtered noise and
- * detuned oscillators, and the pencil/paper SFX are shaped noise bursts.
- * The engine starts only after a user gesture (browser autoplay policy).
- *
- * Background music (e.g. public/audio/song.mp3) is loaded and played
- * separately via playTrack().
+ * Background music (audio/song.mp3) is loaded via HTML5 Audio and connected
+ * to the Web Audio graph so the master gain controls both the song and the
+ * ambient room tone independently.
  */
 
 export type Sfx = 'scribe' | 'pop' | 'click' | 'chime' | 'page' | 'whoosh';
@@ -17,6 +14,8 @@ class AudioEngine {
   private ctx: AudioContext | null = null;
 
   private master: GainNode | null = null;
+
+  private ambientGain: GainNode | null = null;
 
   private noiseBuffer: AudioBuffer | null = null;
 
@@ -88,13 +87,17 @@ class AudioEngine {
     if (!this.ctx || !this.master || !this.noiseBuffer || this.started) return;
     const ctx = this.ctx;
 
-    // 1. Slow breathing pad: detuned sines through a lowpass, connected directly to master.
+    this.ambientGain = ctx.createGain();
+    this.ambientGain.gain.value = this.muted ? 0 : 0.85;
+    this.ambientGain.connect(this.master);
+
+    // 1. Slow breathing pad: detuned sines through a lowpass.
     const pad = ctx.createGain();
     pad.gain.value = 0.05;
     const filter = ctx.createBiquadFilter();
     filter.type = 'lowpass';
     filter.frequency.value = 420;
-    pad.connect(filter).connect(this.master);
+    pad.connect(filter).connect(this.ambientGain);
 
     [110, 164.81, 220].forEach((freq, index) => {
       const osc = ctx.createOscillator();
@@ -117,7 +120,7 @@ class AudioEngine {
     noiseFilter.Q.value = 0.6;
     const noiseGain = ctx.createGain();
     noiseGain.gain.value = 0.16;
-    noise.connect(noiseFilter).connect(noiseGain).connect(this.master);
+    noise.connect(noiseFilter).connect(noiseGain).connect(this.ambientGain);
     noise.start();
 
     const lfo = ctx.createOscillator();
@@ -126,11 +129,6 @@ class AudioEngine {
     lfoGain.gain.value = 240;
     lfo.connect(lfoGain).connect(noiseFilter.frequency);
     lfo.start();
-
-    const now = ctx.currentTime;
-    this.master.gain.cancelScheduledValues(now);
-    this.master.gain.setValueAtTime(0.0001, now);
-    this.master.gain.linearRampToValueAtTime(0.85, now + 6);
 
     this.started = true;
     this.emit();
@@ -142,17 +140,29 @@ class AudioEngine {
 
   /**
    * Load and loop an audio file (e.g. audio/song.mp3).
+   * Connects to the Web Audio graph so master gain controls volume.
    * Call after a user gesture so the browser allows autoplay.
    */
   async playTrack(path: string): Promise<void> {
     if (this.trackPlaying) return;
     try {
+      await this.unlock();
       const audio = new Audio(path);
       audio.loop = true;
-      audio.volume = this.muted ? 0 : 0.85;
+      audio.volume = 0;
+
+      if (this.ctx) {
+        const source = this.ctx.createMediaElementSource(audio);
+        source.connect(this.master!);
+      }
+
       this.trackAudio = audio;
       audio.play().then(() => {
         this.trackPlaying = true;
+        // Lower ambient volume when music is playing.
+        if (this.ambientGain) {
+          this.ambientGain.gain.setTargetAtTime(0.15, this.ctx!.currentTime, 0.3);
+        }
       }).catch(() => { /* silent */ });
     } catch {
       /* silent failure if the track cannot be loaded */
@@ -165,8 +175,11 @@ class AudioEngine {
       window.localStorage.setItem(STORAGE_KEY, muted ? 'off' : 'on');
     }
     if (this.trackAudio) {
-      this.trackAudio.volume = muted ? 0 : 0.85;
-      if (!muted) void this.trackAudio.play();
+      if (muted) {
+        void this.trackAudio.pause();
+      } else {
+        void this.trackAudio.play();
+      }
     }
     if (!muted) {
       void this.startAmbient();
@@ -175,6 +188,11 @@ class AudioEngine {
       const now = this.ctx.currentTime;
       this.master.gain.cancelScheduledValues(now);
       this.master.gain.setTargetAtTime(muted ? 0 : 0.85, now, 0.25);
+    }
+    if (this.ambientGain) {
+      const now = this.ctx!.currentTime;
+      this.ambientGain.gain.cancelScheduledValues(now);
+      this.ambientGain.gain.setTargetAtTime(muted ? 0 : 0.85, now, 0.25);
     }
     this.emit();
   }
