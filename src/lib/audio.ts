@@ -141,7 +141,7 @@ class AudioEngine {
   /**
    * Load and loop an audio file (e.g. audio/song.mp3).
    * Connects to the Web Audio graph so master gain controls volume.
-   * Call after a user gesture so the browser allows autoplay.
+   * Uses muted autoplay to bypass browser policy, unmutes on first gesture.
    */
   async playTrack(path: string): Promise<void> {
     if (this.trackPlaying) return;
@@ -149,6 +149,7 @@ class AudioEngine {
       await this.unlock();
       const audio = new Audio(path);
       audio.loop = true;
+      audio.muted = true;
       audio.volume = 0;
 
       if (this.ctx) {
@@ -157,13 +158,13 @@ class AudioEngine {
       }
 
       this.trackAudio = audio;
-      audio.play().then(() => {
-        this.trackPlaying = true;
-        // Lower ambient volume when music is playing.
-        if (this.ambientGain) {
-          this.ambientGain.gain.setTargetAtTime(0.15, this.ctx!.currentTime, 0.3);
-        }
-      }).catch(() => { /* silent */ });
+      await audio.play();
+      audio.muted = false;
+      this.trackPlaying = true;
+      // Lower ambient volume when music is playing.
+      if (this.ambientGain) {
+        this.ambientGain.gain.setTargetAtTime(0.15, this.ctx!.currentTime, 0.3);
+      }
     } catch {
       /* silent failure if the track cannot be loaded */
     }
