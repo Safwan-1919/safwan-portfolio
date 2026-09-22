@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "test:audio": "node test-audio.js",
+    "dev": "vite",
+    "build": "vite build"
+  }
+}

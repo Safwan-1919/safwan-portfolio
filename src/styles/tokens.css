@@ -1,0 +1,70 @@
+/**
+ * KRAFT design tokens.
+ * Paper, ink and pencil: the whole theme is three greys, two handwriting fonts
+ * and one UI font. Change the values here to re-skin the entire site.
+ */
+
+:root {
+  /* Paper */
+  --paper: #fafafa;
+  --paper-warm: #f5f3ee;
+  --paper-sheet: #fffefb;
+  --paper-deep: #efece4;
+  --paper-shadow: rgba(10, 10, 10, 0.08);
+  --paper-shadow-strong: rgba(10, 10, 10, 0.16);
+
+  /* Ink */
+  --ink: #0a0a0a;
+  --ink-stroke: #1a1a1a;
+  --ink-mid: #444444;
+  --ink-soft: #666666;
+  --ink-faint: #8a8a8a;
+  --line: #e6e3dc;
+  --line-strong: #cfcbc1;
+
+  /* Accents (kept deliberately earthy - this theme is pencil, not neon) */
+  --accent-tape: #e8dfc6;
+  --accent-stamp: #b6543f;
+  --accent-highlight: #efe6c8;
+
+  /* Typography */
+  --font-hand: 'Caveat', 'Segoe Script', cursive;
+  --font-hand-alt: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --font-doodle: 'Gloria Hallelujah', 'Patrick Hand', cursive;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Scale */
+  --step--2: clamp(0.7rem, 0.68rem + 0.1vw, 0.78rem);
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.92rem);
+  --step-0: clamp(0.95rem, 0.91rem + 0.2vw, 1.05rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step-2: clamp(1.45rem, 1.25rem + 1vw, 2rem);
+  --step-3: clamp(1.9rem, 1.5rem + 2vw, 3rem);
+  --step-4: clamp(2.6rem, 1.6rem + 4.4vw, 5.2rem);
+  --step-5: clamp(3.4rem, 1.6rem + 7vw, 8rem);
+
+  /* Space */
+  --gutter: clamp(1rem, 0.6rem + 2vw, 3rem);
+  --radius-sketch: 14px 255px 16px 255px / 255px 14px 255px 16px;
+
+  /* Motion */
+  --ease-paper: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-sketch: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Layers */
+  --z-canvas: 1;
+  --z-grain: 4;
+  --z-ui: 50;
+  --z-sheet: 70;
+  --z-popup: 110;
+  --z-cursor: 200;
+  --z-preloader: 300;
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --ink-soft: #3a3a3a;
+    --ink-faint: #5a5a5a;
+    --line: #b9b4a8;
+  }
+}

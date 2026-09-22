@@ -1,0 +1,82 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 6 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Length 5027 >>
+stream
+BT /F2 23 Tf 1 0 0 1 56 785.89 Tm (Mohammed Safwan) Tj ET
+BT /F1 11.5 Tf 1 0 0 1 56 766.89 Tm (Technical Lead & Full-Stack Developer) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 750.89 Tm (safwancoding1919@gmail.com · +91-7892104273 · Mangalore, Karnataka, India) Tj ET
+0.5 w 56 738.89 m 539.28 738.89 l S
+BT /F2 11 Tf 1 0 0 1 56 702.89 Tm (PROFILE) Tj ET
+0.5 w 56 696.89 m 539.28 696.89 l S
+BT /F1 9.5 Tf 1 0 0 1 56 676.39 Tm (I am a computer science engineer and technical lead who manages the entire development cycle - from) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 663.89 Tm (writing the first line of code and reviewing every pull request to pushing releases to the Play) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 651.39 Tm (Store, the App Store and production web.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 638.89 Tm (Day to day I work across React Native \(Expo\), Next.js, Firebase and Fastify, with PostgreSQL or) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 626.39 Tm (Firestore behind it. I have shipped a masjid community platform live on three stores, a school ERP) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 613.89 Tm (with 93+ API endpoints and ten role scopes, and a fashion e-commerce storefront with a full admin) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 601.39 Tm (dashboard.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 588.89 Tm (As a lead I handle architecture decisions, enforce coding standards through reviews, translate) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 576.39 Tm (business requirements into technical plans, and make sure things stay stable after launch. I like) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 563.89 Tm (typed code, small pull requests and shipping on schedule.) Tj ET
+BT /F2 11 Tf 1 0 0 1 56 537.89 Tm (SELECTED WORK) Tj ET
+0.5 w 56 531.89 m 539.28 531.89 l S
+BT /F2 10.5 Tf 1 0 0 1 56 510.39 Tm (Minara  Masjid community platform, live on three stores) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 497.89 Tm (2025 · Full-Stack Developer & Team Lead · minaraapp.in) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 485.39 Tm (A masjid community app with five user roles and strict role-based access control across iOS, Android) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 472.89 Tm (and web. Prayer times, Quran reader, UPI donation tracking with OCR receipt verification, push) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 460.39 Tm (notifications and a WhatsApp bot all run off one Firebase backend.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 447.89 Tm (Stack: React Native, Expo, TypeScript, Firebase, Zustand, GCP Vision) Tj ET
+BT /F2 10.5 Tf 1 0 0 1 56 428.39 Tm (Kivquo  School ERP with 93+ API endpoints) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 415.89 Tm (2026 · Full-Stack Developer & Team Lead · School management platform) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 403.39 Tm (A complete school management platform covering ten user roles with scoped RBAC behind a Fastify +) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 390.89 Tm (PostgreSQL API. The academics suite handles attendance, exams and grades, timetable versioning,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 378.39 Tm (homework and real-time bus tracking with live location updates.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 365.89 Tm (Stack: React Native, Expo, Fastify, PostgreSQL, Firebase Auth, TypeScript) Tj ET
+BT /F2 10.5 Tf 1 0 0 1 56 346.39 Tm (Maison  Premium fashion e-commerce platform) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 333.89 Tm (2025 · Full-Stack Developer · Fashion retail) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 321.39 Tm (A premium fashion storefront built on Next.js 16 and React 19, with advanced product filtering, cart,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 308.89 Tm (wishlist and a three-step checkout with coupon support. An admin dashboard handles revenue analytics,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 296.39 Tm (product and order management, dynamic content and a points-based loyalty program.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 283.89 Tm (Stack: Next.js 16, React 19, Tailwind CSS 4, Prisma, PostgreSQL) Tj ET
+BT /F2 11 Tf 1 0 0 1 56 251.89 Tm (EXPERIENCE) Tj ET
+0.5 w 56 245.89 m 539.28 245.89 l S
+BT /F2 10.5 Tf 1 0 0 1 56 224.39 Tm (January 2025  Present  Technical Lead, Found Solutions) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 211.89 Tm (Leading technical initiatives and guiding the team in designing and delivering scalable software. I) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 199.39 Tm (own architecture decisions, run code reviews, keep coding standards in place, and coordinate with) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 186.89 Tm (stakeholders to translate business requirements into technical implementations.) Tj ET
+BT /F2 10.5 Tf 1 0 0 1 56 168.39 Tm (January 2026  April 2026  QA Engineer  Analytics, Unicourt Mangalore Infotech) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 155.89 Tm (Worked on real-world court-related projects, extracting actionable insights from complex legal) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 143.39 Tm (datasets. Ran quality assurance and data validation to keep analytics outputs accurate, and) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 56 130.89 Tm (collaborated across teams to streamline data pipelines and reporting.) Tj ET
+BT /F2 10.5 Tf 1 0 0 1 56 112.38999999999999 Tm (July 2025  October 2025  Salesforce Intern, Novigo Solutions) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000257 00000 n 
+0000000354 00000 n 
+0000000456 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+5534
+%%EOF
