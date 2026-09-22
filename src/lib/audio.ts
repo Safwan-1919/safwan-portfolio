@@ -24,6 +24,8 @@ class AudioEngine {
 
   private trackPlaying = false;
 
+  private trackAudio: HTMLAudioElement | null = null;
+
   private listeners = new Set<(muted: boolean) => void>();
 
   muted = false;
@@ -134,13 +136,40 @@ class AudioEngine {
     this.emit();
   }
 
+  async toggle(): Promise<void> {
+    await this.setMuted(!this.muted);
+  }
+
+  /**
+   * Load and loop an audio file (e.g. audio/song.mp3).
+   * Call after a user gesture so the browser allows autoplay.
+   */
+  async playTrack(path: string): Promise<void> {
+    if (this.trackPlaying) return;
+    try {
+      const audio = new Audio(path);
+      audio.loop = true;
+      audio.volume = this.muted ? 0 : 0.85;
+      this.trackAudio = audio;
+      audio.play().then(() => {
+        this.trackPlaying = true;
+      }).catch(() => { /* silent */ });
+    } catch {
+      /* silent failure if the track cannot be loaded */
+    }
+  }
+
   async setMuted(muted: boolean): Promise<void> {
     this.muted = muted;
     if (typeof window !== 'undefined') {
       window.localStorage.setItem(STORAGE_KEY, muted ? 'off' : 'on');
     }
+    if (this.trackAudio) {
+      this.trackAudio.volume = muted ? 0 : 0.85;
+      if (!muted) void this.trackAudio.play();
+    }
     if (!muted) {
-      await this.startAmbient();
+      void this.startAmbient();
     }
     if (this.ctx && this.master) {
       const now = this.ctx.currentTime;
@@ -148,33 +177,6 @@ class AudioEngine {
       this.master.gain.setTargetAtTime(muted ? 0 : 0.85, now, 0.25);
     }
     this.emit();
-  }
-
-  async toggle(): Promise<void> {
-    await this.setMuted(!this.muted);
-  }
-
-  /**
-   * Load and loop an audio file (e.g. audio/song.mp3) through the audio graph.
-   * Call after a user gesture so the AudioContext is already unlocked.
-   */
-  async playTrack(path: string): Promise<void> {
-    await this.unlock();
-    if (!this.ctx || !this.master || this.trackPlaying) return;
-    try {
-      const response = await fetch(path);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.ctx.decodeAudioData(arrayBuffer);
-      const source = this.ctx.createBufferSource();
-      source.buffer = audioBuffer;
-      source.loop = true;
-      source.connect(this.master);
-      source.start(0);
-      this.trackPlaying = true;
-    } catch {
-      /* silent failure if the track cannot be loaded */
-    }
   }
 
   /** Fire a hand-drawn SFX. Silent while muted or before the first gesture. */
