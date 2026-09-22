@@ -89,7 +89,7 @@ export function Preloader({ onComplete }: PreloaderProps): ReactNode {
 
   // Arm the audio unlocker on the first gesture of the session.
   useEffect(() => {
-    void audio.playTrack('audio/song.mp3');
+    void audio.playTrack('/audio/song.mp3');
     armAudioUnlock();
   }, []);
 

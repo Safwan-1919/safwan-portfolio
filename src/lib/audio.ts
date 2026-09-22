@@ -144,18 +144,19 @@ class AudioEngine {
    * using the muted trick without a user gesture.
    */
   async playTrack(path: string): Promise<void> {
-    if (this.trackPlaying || this.trackAudio) return;
+    if (this.trackPlaying) return;
     try {
       const audio = new Audio(path);
       audio.loop = true;
       audio.muted = true;
       audio.volume = this.muted ? 0 : 0.85;
-      this.trackAudio = audio;
       await audio.play();
       audio.muted = this.muted;
+      this.trackAudio = audio;
       this.trackPlaying = true;
-    } catch {
-      /* browser blocked autoplay — armAudioUnlock retries on gesture */
+      console.log('[audio] track playing:', path);
+    } catch (err) {
+      console.log('[audio] track failed:', path, err);
     }
   }
 
@@ -302,7 +303,7 @@ export function armAudioUnlock(): () => void {
     if (!audio.isMuted) {
       void audio.startAmbient();
     }
-    void audio.playTrack('audio/song.mp3');
+    void audio.playTrack('/audio/song.mp3');
   };
   // Chrome only treats pointerdown/keydown as valid AudioContext gestures.
   const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown'];

@@ -174,7 +174,7 @@ export function ExperienceProvider({
   const unmuteSound = useCallback(() => {
       void audio.startAmbient();
       void audio.setMuted(false);
-      void audio.playTrack('audio/song.mp3');
+      void audio.playTrack('/audio/song.mp3');
       unlock('sound-on');
   }, [unlock]);
 
