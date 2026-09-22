@@ -143,20 +143,28 @@ class AudioEngine {
    * Pure HTML5 Audio — no AudioContext needed, so it can autoplay
    * using the muted trick without a user gesture.
    */
-  async playTrack(path: string): Promise<void> {
-    if (this.trackPlaying) return;
+  async playTrack(_path: string): Promise<void> {
     try {
-      const audio = new Audio(path);
+      const audio = document.getElementById('bg-music') as HTMLAudioElement | null;
+      if (!audio) return;
       audio.loop = true;
-      audio.muted = true;
       audio.volume = this.muted ? 0 : 0.85;
-      await audio.play();
-      audio.muted = this.muted;
       this.trackAudio = audio;
+
+      if (this.trackPlaying) {
+        // Already playing (muted autoplay) — just sync mute state.
+        audio.muted = this.muted;
+        return;
+      }
+
+      if (audio.paused) {
+        await audio.play();
+      }
+      audio.muted = this.muted;
       this.trackPlaying = true;
-      console.log('[audio] track playing:', path);
+      console.log('[audio] track playing:', audio.src);
     } catch (err) {
-      console.log('[audio] track failed:', path, err);
+      console.log('[audio] track failed:', err);
     }
   }
 
