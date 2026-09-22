@@ -140,33 +140,22 @@ class AudioEngine {
 
   /**
    * Load and loop an audio file (e.g. audio/song.mp3).
-   * Connects to the Web Audio graph so master gain controls volume.
-   * Uses muted autoplay to bypass browser policy, unmutes on first gesture.
+   * Pure HTML5 Audio — no AudioContext needed, so it can autoplay
+   * using the muted trick without a user gesture.
    */
   async playTrack(path: string): Promise<void> {
-    if (this.trackPlaying) return;
+    if (this.trackPlaying || this.trackAudio) return;
     try {
-      await this.unlock();
       const audio = new Audio(path);
       audio.loop = true;
       audio.muted = true;
-      audio.volume = 0;
-
-      if (this.ctx) {
-        const source = this.ctx.createMediaElementSource(audio);
-        source.connect(this.master!);
-      }
-
+      audio.volume = this.muted ? 0 : 0.85;
       this.trackAudio = audio;
       await audio.play();
-      audio.muted = false;
+      audio.muted = this.muted;
       this.trackPlaying = true;
-      // Lower ambient volume when music is playing.
-      if (this.ambientGain) {
-        this.ambientGain.gain.setTargetAtTime(0.15, this.ctx!.currentTime, 0.3);
-      }
     } catch {
-      /* silent failure if the track cannot be loaded */
+      /* browser blocked autoplay — armAudioUnlock retries on gesture */
     }
   }
 
@@ -176,14 +165,12 @@ class AudioEngine {
       window.localStorage.setItem(STORAGE_KEY, muted ? 'off' : 'on');
     }
     if (this.trackAudio) {
+      this.trackAudio.volume = muted ? 0 : 0.85;
       if (muted) {
-        void this.trackAudio.pause();
+        this.trackAudio.pause();
       } else {
         void this.trackAudio.play();
       }
-    }
-    if (!muted) {
-      void this.startAmbient();
     }
     if (this.ctx && this.master) {
       const now = this.ctx.currentTime;
@@ -308,18 +295,17 @@ class AudioEngine {
 
 export const audio = new AudioEngine();
 
-/** Attach the one-time gesture listener that unlocks audio. */
+/** Attach the gesture listener that unlocks Web Audio (ambient + SFX). */
 export function armAudioUnlock(): () => void {
   if (typeof window === 'undefined') return () => undefined;
   const handler = () => {
-    if (audio.isMuted) {
-      void audio.unlock();
-    } else {
+    if (!audio.isMuted) {
       void audio.startAmbient();
     }
     void audio.playTrack('audio/song.mp3');
   };
-  const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  // Chrome only treats pointerdown/keydown as valid AudioContext gestures.
+  const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown'];
   events.forEach((event) => window.addEventListener(event, handler, { passive: true }));
   return () => events.forEach((event) => window.removeEventListener(event, handler));
 }
