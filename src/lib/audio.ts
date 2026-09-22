@@ -290,15 +290,14 @@ export const audio = new AudioEngine();
 /** Attach the one-time gesture listener that unlocks audio. */
 export function armAudioUnlock(): () => void {
   if (typeof window === 'undefined') return () => undefined;
-    const handler = () => {
-        // Respect the saved preference: never make noise for a muted visitor.
-        if (audio.isMuted) {
-            void audio.unlock();
-            return;
-        }
-        void audio.startAmbient();
-        void audio.playTrack('audio/song.mp3');
-    };
+  const handler = () => {
+    if (audio.isMuted) {
+      void audio.unlock();
+    } else {
+      void audio.startAmbient();
+    }
+    void audio.playTrack('audio/song.mp3');
+  };
   const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
   events.forEach((event) => window.addEventListener(event, handler, { passive: true }));
   return () => events.forEach((event) => window.removeEventListener(event, handler));
