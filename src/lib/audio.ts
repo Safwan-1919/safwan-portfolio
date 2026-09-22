@@ -41,6 +41,10 @@ class AudioEngine {
     return this.muted;
   }
 
+  isTrackPlaying(): boolean {
+    return this.trackPlaying;
+  }
+
   /** Subscribe to mute changes (nav toggle + inline popup toggle share this). */
   subscribe(listener: (muted: boolean) => void): () => void {
     this.listeners.add(listener);
@@ -144,27 +148,29 @@ class AudioEngine {
    * using the muted trick without a user gesture.
    */
   async playTrack(_path: string): Promise<void> {
-    try {
-      const audio = document.getElementById('bg-music') as HTMLAudioElement | null;
-      if (!audio) return;
-      audio.loop = true;
-      audio.volume = this.muted ? 0 : 0.85;
-      this.trackAudio = audio;
+    const el = document.getElementById('bg-music') as HTMLAudioElement | null;
+    if (!el) return;
+    this.trackAudio = el;
+    el.loop = true;
+    el.volume = this.muted ? 0 : 0.85;
 
-      if (this.trackPlaying) {
-        // Already playing (muted autoplay) — just sync mute state.
-        audio.muted = this.muted;
-        return;
-      }
-
-      if (audio.paused) {
-        await audio.play();
-      }
-      audio.muted = this.muted;
+    if (!el.paused) {
       this.trackPlaying = true;
-      console.log('[audio] track playing:', audio.src);
-    } catch (err) {
-      console.log('[audio] track failed:', err);
+      el.muted = this.muted;
+      return;
+    }
+
+    // Force muted=true so Chrome allows play() without a user gesture,
+    // then restore the real mute state once playback has started.
+    el.muted = true;
+    try {
+      await el.play();
+      el.muted = this.muted;
+      this.trackPlaying = true;
+      console.log('[audio] track playing:', el.src);
+    } catch {
+      this.trackPlaying = false;
+      console.log('[audio] track blocked — waiting for first click');
     }
   }
 
@@ -311,7 +317,12 @@ export function armAudioUnlock(): () => void {
     if (!audio.isMuted) {
       void audio.startAmbient();
     }
-    void audio.playTrack('/audio/song.mp3');
+    void audio.playTrack('/audio/song.mp3').then(() => {
+      // Detach once the track is actually playing.
+      if (audio.isTrackPlaying()) {
+        events.forEach((event) => window.removeEventListener(event, handler));
+      }
+    });
   };
   // Chrome only treats pointerdown/keydown as valid AudioContext gestures.
   const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown'];
